@@ -1,18 +1,44 @@
 version: '3.9'
 
 services:
-  mlflow_example:
+  ml_service:
     build:
       context: ./
       dockerfile: ./Dockerfile
-    image: ml_service:$USER
-    container_name: ml_service_$USER
+    image: ml_service_1:daklo
+    container_name: ml_service_1_daklo
     working_dir: /app
     volumes:
       - ./:/app
     ports:
-      - 1488:8890
+      - 1414:8897
     environment:
       - MLFLOW_TRACKING_URI=http://158.160.2.37:5000/
       - DEFAULT_RUN_ID=${DEFAULT_RUN_ID}
-    command: uvicorn main:app --host 0.0.0.0 --port 8890
+    command: uvicorn main:app --host 0.0.0.0 --port 8897
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus_daklo
+    volumes:
+      - ./monitor/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+    depends_on:
+      - ml_service
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana_daklo
+    ports:
+      - 3000:3000
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitor/grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
+
+volumes:
+  grafana_data:

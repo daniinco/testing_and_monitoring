@@ -10,6 +10,6 @@ WORKDIR /app
 
 COPY . /app
 
-EXPOSE 8890
+EXPOSE 8897
 
-CMD uvicorn main:app --host 0.0.0.0 --port 8890
+CMD uvicorn main:app --host 0.0.0.0 --port 8897

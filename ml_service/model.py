@@ -25,10 +25,15 @@ class Model:
             return self.data
 
     def set(self, run_id: str) -> None:
+        if not run_id or not run_id.strip():
+            raise ValueError('run_id must not be empty')
         model = load_model(run_id=run_id)
         with self.lock:
             self.data = ModelData(model=model, run_id=run_id)
 
     @property
     def features(self) -> list[str]:
-        return self.data.model.feature_names_in_
+        model = self.data.model
+        if model is None:
+            raise RuntimeError('Model is not loaded')
+        return list(model.feature_names_in_)

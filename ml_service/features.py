@@ -26,4 +26,9 @@ def to_dataframe(req: PredictRequest, needed_columns: list[str] = None) -> pd.Da
         column for column in needed_columns if column in FEATURE_COLUMNS
     ] if needed_columns is not None else FEATURE_COLUMNS
     row = [getattr(req, column.replace('.', '_')) for column in columns]
+
+    missing = [col for col in columns if getattr(req, col.replace('.', '_')) is None]
+    if missing:
+        raise ValueError(f'Missing required features: {missing}')
+
     return pd.DataFrame([row], columns=columns)
