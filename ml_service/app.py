@@ -19,20 +19,6 @@ from ml_service.schemas import (
 
 MODEL = Model()
 
-REQUEST_COUNT = Counter('http_requests_total', 'Total HTTP requests', ['method', 'endpoint', 'status'])
-REQUEST_LATENCY = Histogram('http_request_duration_seconds', 'HTTP request latency', ['endpoint'],
-                            buckets=[0.01, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0])
-PREPROCESS_LATENCY = Histogram('preprocess_duration_seconds', 'Preprocessing latency',
-                               buckets=[0.001, 0.005, 0.01, 0.05, 0.1, 0.5])
-INFERENCE_LATENCY = Histogram('inference_duration_seconds', 'Model inference latency',
-                              buckets=[0.001, 0.005, 0.01, 0.05, 0.1, 0.5])
-PREDICTION_VALUE = Counter('model_predictions_total', 'Model predictions', ['prediction'])
-PREDICTION_PROBA = Histogram('model_prediction_probability', 'Model prediction probabilities',
-                             buckets=[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
-MODEL_UPDATE_COUNT = Counter('model_updates_total', 'Number of model updates')
-CURRENT_MODEL_RUN_ID = Gauge('current_model_run_id_info', 'Current model run_id', ['run_id'])
-FEATURE_VALUES = Histogram('feature_value', 'Feature values', ['feature'])
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
